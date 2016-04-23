@@ -7,7 +7,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
-	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/gin-gonic/gin"
 )
 
@@ -50,22 +49,28 @@ func userAuth(c *gin.Context) {
 		} else {
 			if *resp.Item["Email"].S == form.Email && *resp.Item["Password"].S == form.Password {
 				// c.JSON(200, gin.H{"status": "Logged in!"})
+				bucketlist := ""
 				for _, dataset := range resp.Item["Datasets"].SS {
-					s3instance := s3.New(session.New(&aws.Config{Region: aws.String("us-west-2")}))
-					page := 0
-					err := s3instance.ListObjectsPages(&s3.ListObjectsInput{
-						Bucket: dataset,
-					}, func(p *s3.ListObjectsOutput, last bool) (shouldContinue bool) {
-						fmt.Println("Page,", page)
-						for _, obj := range p.Contents {
-							fmt.Println("Object:", *obj.Key)
-						}
-						return true
-					})
-					if err != nil {
-						fmt.Println("failted to list objects", err)
-					}
+					bucketlist = bucketlist + makeListItem(*dataset)
+					// s3instance := s3.New(session.New(&aws.Config{Region: aws.String("us-west-2")}))
+					// page := 0
+					// err := s3instance.ListObjectsPages(&s3.ListObjectsInput{
+					// 	Bucket: dataset,
+					// }, func(p *s3.ListObjectsOutput, last bool) (shouldContinue bool) {
+					// 	fmt.Println("Page,", page)
+					// 	for _, obj := range p.Contents {
+					// 		fmt.Println("Object:", *obj.Key)
+					// 	}
+					// 	return true
+					// })
+					// if err != nil {
+					// 	fmt.Println("failted to list objects", err)
+					// }
 				}
+				fmt.Println(bucketlist)
+				c.HTML(http.StatusOK, "bucketlist.tmpl", gin.H{
+					"bucketlist": bucketlist,
+				})
 			} else {
 				// c.JSON(401, gin.H{"status": "Unauthorized"})
 				c.HTML(http.StatusUnauthorized, "index.tmpl", gin.H{
@@ -74,4 +79,9 @@ func userAuth(c *gin.Context) {
 			}
 		}
 	}
+}
+
+func makeListItem(bucket string) string {
+	liststring := "<li>" + bucket + "</li>"
+	return liststring
 }
