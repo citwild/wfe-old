@@ -11,12 +11,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Login is a struct to get form data from website
+// Login is a struct to get login form data
 type Login struct {
 	Email    string `form:"email" json:"email" binding:"required"`
 	Password string `form:"password" json:"password" binding:"required"`
 }
 
+// SelectedBucket is a struct to get the selected bucket form data
 type SelectedBucket struct {
 	Bucket string `form:"selectbucket" json:"selectbucket" binding:"required"`
 }
@@ -36,6 +37,7 @@ func wfeIndex(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 }
 
+// TODO: Show error message on page without reloading the page.
 func userAuth(c *gin.Context) {
 	var form Login
 	if c.Bind(&form) == nil {
@@ -74,6 +76,11 @@ func userAuth(c *gin.Context) {
 	}
 }
 
+// TODO: Make a website for bucketlisting.
+// TODO: Print output of bucketlisting on the webpage.
+// TODO: Add links to open the files.
+// TODO: Permissions of the files.
+// TODO: Show error message on page without reloading the page.
 func bucketShow(c *gin.Context) {
 	var bucket SelectedBucket
 	if c.Bind(&bucket) == nil {
@@ -91,5 +98,9 @@ func bucketShow(c *gin.Context) {
 		if err != nil {
 			fmt.Println("failed to list objects", err)
 		}
+	} else {
+		c.HTML(http.StatusUnauthorized, "bucketlist.tmpl", gin.H{
+			"message": "Please select a bucket.",
+		})
 	}
 }
