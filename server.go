@@ -22,6 +22,8 @@ type SelectedBucket struct {
 	Bucket string `form:"selectbucket" json:"selectbucket" binding:"required"`
 }
 
+// TODO: requestccess route
+// TODO: contect route
 func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.tmpl")
@@ -99,8 +101,6 @@ func bucketShow(c *gin.Context) {
 			fmt.Println("failed to list objects", err)
 		}
 	} else {
-		c.HTML(http.StatusUnauthorized, "bucketlist.tmpl", gin.H{
-			"message": "Please select a bucket.",
-		})
+		fmt.Println("No bucket selected.")
 	}
 }
