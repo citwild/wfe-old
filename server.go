@@ -18,7 +18,7 @@ type Login struct {
 
 func main() {
 	router := gin.Default()
-	router.LoadHTMLGlob("templates/*")
+	router.LoadHTMLGlob("templates/*.tmpl")
 
 	router.GET("/", wfeIndex)
 	router.POST("/auth", userAuth)
@@ -49,9 +49,9 @@ func userAuth(c *gin.Context) {
 		} else {
 			if *resp.Item["Email"].S == form.Email && *resp.Item["Password"].S == form.Password {
 				// c.JSON(200, gin.H{"status": "Logged in!"})
-				bucketlist := ""
+				var bucketlist []string
 				for _, dataset := range resp.Item["Datasets"].SS {
-					bucketlist = bucketlist + makeListItem(*dataset)
+					bucketlist = append(bucketlist, *dataset)
 					// s3instance := s3.New(session.New(&aws.Config{Region: aws.String("us-west-2")}))
 					// page := 0
 					// err := s3instance.ListObjectsPages(&s3.ListObjectsInput{
@@ -78,10 +78,14 @@ func userAuth(c *gin.Context) {
 				})
 			}
 		}
+	} else {
+		c.HTML(http.StatusUnauthorized, "index.tmpl", gin.H{
+			"message": "Invalid login information.",
+		})
 	}
 }
 
 func makeListItem(bucket string) string {
-	liststring := "<li>" + bucket + "</li>"
+	liststring := bucket
 	return liststring
 }
