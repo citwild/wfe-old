@@ -45,7 +45,7 @@ func userAuth(c *gin.Context) {
 	if c.Bind(&form) == nil {
 		dbInstance := dynamodb.New(session.New(&aws.Config{Region: aws.String("us-west-2")}))
 		params := &dynamodb.GetItemInput{
-			Key: map[string]*dynamodb.AttributeValue{ // Required
+			Key: map[string]*dynamodb.AttributeValue{
 				"Email": {
 					S: aws.String(form.Email),
 				},
@@ -55,16 +55,24 @@ func userAuth(c *gin.Context) {
 		}
 		resp, err := dbInstance.GetItem(params)
 		if err != nil {
-			c.JSON(401, gin.H{"status": "DB error"})
+			c.HTML(http.StatusUnauthorized, "index.tmpl", gin.H{
+				"message": "Database error.",
+			})
 		} else {
-			if *resp.Item["Email"].S == form.Email || *resp.Item["Password"].S == form.Password {
-				var bucketlist []string
-				for _, dataset := range resp.Item["Datasets"].SS {
-					bucketlist = append(bucketlist, *dataset)
+			if _, ok := resp.Item["Email"]; ok {
+				if *resp.Item["Email"].S == form.Email && *resp.Item["Password"].S == form.Password {
+					var bucketlist []string
+					for _, dataset := range resp.Item["Datasets"].SS {
+						bucketlist = append(bucketlist, *dataset)
+					}
+					c.HTML(http.StatusOK, "bucketlist.tmpl", gin.H{
+						"bucketlist": bucketlist,
+					})
+				} else {
+					c.HTML(http.StatusUnauthorized, "index.tmpl", gin.H{
+						"message": "Invalid login information.",
+					})
 				}
-				c.HTML(http.StatusOK, "bucketlist.tmpl", gin.H{
-					"bucketlist": bucketlist,
-				})
 			} else {
 				c.HTML(http.StatusUnauthorized, "index.tmpl", gin.H{
 					"message": "Invalid login information.",
@@ -73,7 +81,7 @@ func userAuth(c *gin.Context) {
 		}
 	} else {
 		c.HTML(http.StatusUnauthorized, "index.tmpl", gin.H{
-			"message": "Invalid login information.",
+			"message": "Please fill the form with valid login information.",
 		})
 	}
 }
@@ -101,6 +109,6 @@ func bucketShow(c *gin.Context) {
 			fmt.Println("failed to list objects", err)
 		}
 	} else {
-		fmt.Println("No bucket selected.")
+		fmt.Println("No bucket selected.go ")
 	}
 }
