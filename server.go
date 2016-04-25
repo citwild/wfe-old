@@ -23,14 +23,15 @@ type SelectedBucket struct {
 }
 
 // TODO: requestccess route
-// TODO: contect route
 func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.tmpl")
 
 	router.GET("/", wfeIndex)
+	router.GET("/contact", wfeContact)
 	router.POST("/auth", userAuth)
 	router.POST("/bucketlist", bucketShow)
+	// router.POST("/requestccess", wfeRequestAccess)
 
 	router.Run(":8080")
 }
@@ -39,7 +40,10 @@ func wfeIndex(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 }
 
-// TODO: Show error message on page without reloading the page.
+func wfeContact(c *gin.Context) {
+	c.HTML(http.StatusOK, "contact.tmpl", gin.H{})
+}
+
 func userAuth(c *gin.Context) {
 	var form Login
 	if c.Bind(&form) == nil {
