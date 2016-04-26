@@ -26,6 +26,8 @@ type SelectedBucket struct {
 func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.tmpl")
+	// Uncomment the next line when ready for release.
+	// gin.SetMode(gin.ReleaseMode)
 
 	router.GET("/", wfeIndex)
 	router.GET("/contact", wfeContact)
