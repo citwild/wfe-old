@@ -57,7 +57,7 @@ func userAuth(c *gin.Context) {
 				},
 			},
 			TableName:      aws.String("WFE"),
-			ConsistentRead: aws.Bool(true),
+			ConsistentRead: aws.Bool(false),
 		}
 		resp, err := dbInstance.GetItem(params)
 		if err != nil {
@@ -92,8 +92,8 @@ func userAuth(c *gin.Context) {
 	}
 }
 
-// TODO: Make a website for bucketlisting.
-// TODO: Print output of bucketlisting on the webpage.
+// TODO: Make a webpage for bucket-listing
+// TODO: Print output of bucket-listing on the webpage.
 // TODO: Add links to open the files.
 // TODO: Permissions of the files.
 // TODO: Show error message on page without reloading the page.
