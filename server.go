@@ -3,12 +3,9 @@ package main
 import (
 	"fmt"
 	"net/http"
-
-	"io"
-	"io/ioutil"
-	"log"
 	"os"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
@@ -18,70 +15,49 @@ import (
 
 // Login is a struct to get login form data
 type Login struct {
-	Email    string `form:"email" json:"email" binding:"required"`
-	Password string `form:"password" json:"password" binding:"required"`
+  Email    string `form:"email" json:"email" binding:"required"`
+  Password string `form:"password" json:"password" binding:"required"`
 }
 
 // SelectedBucket is a struct to get the selected bucket form data
 type SelectedBucket struct {
-	Bucket string `form:"selectbucket" json:"selectbucket" binding:"required"`
+  Bucket string `form:"selectbucket" json:"selectbucket" binding:"required"`
 }
 
-var (
-	Trace   *log.Logger
-	Info    *log.Logger
-	Warning *log.Logger
-	Error   *log.Logger
-)
-
-func Init(
-	traceHandle io.Writer,
-	infoHandle io.Writer,
-	warningHandle io.Writer,
-	errorHandle io.Writer) {
-
-	Trace = log.New(traceHandle,
-		"TRACE: ",
-		log.Ldate|log.Ltime|log.Lshortfile)
-	Info = log.New(infoHandle,
-		"INFO: ",
-		log.Ldate|log.Ltime|log.Lshortfile)
-	Warning = log.New(warningHandle,
-		"WARNING: ",
-		log.Ldate|log.Ltime|log.Lshortfile)
-	Error = log.New(errorHandle,
-		"ERROR: ",
-		log.Ldate|log.Ltime|log.Lshortfile)
-}
+var log = logrus.New()
 
 // TODO: requestccess route
 func main() {
-	Init(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr)
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*.tmpl")
 	// Uncomment the next line when ready for release.
 	// gin.SetMode(gin.ReleaseMode)
 
+	log.Out = os.Stdout
+
 	router.GET("/", wfeIndex)
 	router.GET("/contact", wfeContact)
-	router.POST("/auth", userAuth)
-	router.POST("/bucketlist", bucketShow)
-	// router.POST("/requestccess", wfeRequestAccess)
+	//router.POST("/requestccess", wfeRequestAccess)
+	auth := router.Group("/auth")
+	{
+		auth.POST("/login", authLogin)
+		auth.POST("/bucket", authBucket)
+	}
 
 	router.Run(":8080")
 }
 
 func wfeIndex(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
+  c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 }
 
 func wfeContact(c *gin.Context) {
-	c.HTML(http.StatusOK, "contact.tmpl", gin.H{})
+  c.HTML(http.StatusOK, "contact.tmpl", gin.H{})
 }
 
-func userAuth(c *gin.Context) {
+func authLogin(c *gin.Context) {
 	var form Login
-	Info.Println("Authorizing user")
+	log.Info("Authorizing user")
 	if c.Bind(&form) == nil {
 		dbInstance := dynamodb.New(session.New(&aws.Config{Region: aws.String("us-west-2")}))
 		params := &dynamodb.GetItemInput{
@@ -95,7 +71,7 @@ func userAuth(c *gin.Context) {
 		}
 		resp, err := dbInstance.GetItem(params)
 		if err != nil {
-			Error.Println("Error getting item")
+			log.Info("Error getting item")
 			c.HTML(http.StatusUnauthorized, "index.tmpl", gin.H{
 				"message": "Database error.",
 			})
@@ -106,25 +82,25 @@ func userAuth(c *gin.Context) {
 					for _, dataset := range resp.Item["Datasets"].SS {
 						bucketlist = append(bucketlist, *dataset)
 					}
-					Info.Println("User password and email match")
+					log.Info("User password and email match")
 					c.HTML(http.StatusOK, "bucketlist.tmpl", gin.H{
 						"bucketlist": bucketlist,
 					})
 				} else {
-					Info.Println("Failure authorizing user: Invalid login")
+					log.Info("Failure authorizing user: Invalid login")
 					c.HTML(http.StatusUnauthorized, "index.tmpl", gin.H{
 						"message": "Invalid login information.",
 					})
 				}
 			} else {
-				Info.Println("Failure authorizing user: Invalid login")
+				log.Info("Failure authorizing user: Invalid login")
 				c.HTML(http.StatusUnauthorized, "index.tmpl", gin.H{
 					"message": "Invalid login information.",
 				})
 			}
 		}
 	} else {
-		Info.Println("Failure authorizing user: No input provided")
+		log.Info("Failure authorizing user: No input provided")
 		c.HTML(http.StatusUnauthorized, "index.tmpl", gin.H{
 			"message": "Please fill the form with valid login information.",
 		})
@@ -136,7 +112,7 @@ func userAuth(c *gin.Context) {
 // TODO: Add links to open the files.
 // TODO: Permissions of the files.
 // TODO: Show error message on page without reloading the page.
-func bucketShow(c *gin.Context) {
+func authBucket(c *gin.Context) {
 	var bucket SelectedBucket
 	if c.Bind(&bucket) == nil {
 		s3instance := s3.New(session.New(&aws.Config{Region: aws.String("us-west-2")}))
@@ -151,9 +127,9 @@ func bucketShow(c *gin.Context) {
 			return true
 		})
 		if err != nil {
-			Error.Println("Failed to list objects", err)
+			log.Error("Failed to list objects")
 		}
 	} else {
-		Info.Println("No buckets selected")
+		log.Info("No bucket selected")
 	}
 }
