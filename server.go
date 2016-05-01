@@ -130,6 +130,6 @@ func authBucket(c *gin.Context) {
 			log.Error("Failed to list objects")
 		}
 	} else {
-		log.Info("No buckets selected")
+		log.Info("No bucket selected")
 	}
 }
