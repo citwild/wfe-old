@@ -64,9 +64,12 @@ func main() {
 
 	router.GET("/", wfeIndex)
 	router.GET("/contact", wfeContact)
-	router.POST("/auth", userAuth)
-	router.POST("/bucketlist", bucketShow)
-	// router.POST("/requestccess", wfeRequestAccess)
+	//router.POST("/requestccess", wfeRequestAccess)
+	auth := router.Group("/auth")
+	{
+		auth.POST("/login", authLogin)
+		auth.POST("/bucket", authBucket)
+	}
 
 	router.Run(":8080")
 }
@@ -79,7 +82,7 @@ func wfeContact(c *gin.Context) {
 	c.HTML(http.StatusOK, "contact.tmpl", gin.H{})
 }
 
-func userAuth(c *gin.Context) {
+func authLogin(c *gin.Context) {
 	var form Login
 	Info.Println("Authorizing user")
 	if c.Bind(&form) == nil {
@@ -136,7 +139,7 @@ func userAuth(c *gin.Context) {
 // TODO: Add links to open the files.
 // TODO: Permissions of the files.
 // TODO: Show error message on page without reloading the page.
-func bucketShow(c *gin.Context) {
+func authBucket(c *gin.Context) {
 	var bucket SelectedBucket
 	if c.Bind(&bucket) == nil {
 		s3instance := s3.New(session.New(&aws.Config{Region: aws.String("us-west-2")}))
