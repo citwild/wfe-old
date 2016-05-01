@@ -11,6 +11,9 @@ script:
 
 notifications:
 
+  slack: widefieldethnography:Egm4QWGePoxORiONCUuFBefN
+  on_failure: always
+  
   email:
     recipients:
       - sochas-ras@u.washington.edu
