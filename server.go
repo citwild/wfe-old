@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
     "log"
@@ -148,6 +149,6 @@ func bucketShow(c *gin.Context) {
 			fmt.Println("failed to list objects", err)
 		}
 	} else {
-		fmt.Println("No bucket selected.go ")
+		status := c.Writer.Status()"No bucket selected")
 	}
 }
