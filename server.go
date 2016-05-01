@@ -15,13 +15,13 @@ import (
 
 // Login is a struct to get login form data
 type Login struct {
-	Email    string `form:"email" json:"email" binding:"required"`
-	Password string `form:"password" json:"password" binding:"required"`
+  Email    string `form:"email" json:"email" binding:"required"`
+  Password string `form:"password" json:"password" binding:"required"`
 }
 
 // SelectedBucket is a struct to get the selected bucket form data
 type SelectedBucket struct {
-	Bucket string `form:"selectbucket" json:"selectbucket" binding:"required"`
+  Bucket string `form:"selectbucket" json:"selectbucket" binding:"required"`
 }
 
 var log = logrus.New()
@@ -48,11 +48,11 @@ func main() {
 }
 
 func wfeIndex(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.tmpl", gin.H{})
+  c.HTML(http.StatusOK, "index.tmpl", gin.H{})
 }
 
 func wfeContact(c *gin.Context) {
-	c.HTML(http.StatusOK, "contact.tmpl", gin.H{})
+  c.HTML(http.StatusOK, "contact.tmpl", gin.H{})
 }
 
 func authLogin(c *gin.Context) {
