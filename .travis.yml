@@ -8,3 +8,10 @@ matrix:
 script:
 - go test -v ./...
 - go vet ./...
+
+notifications:
+
+  email:
+    recipients:
+      - sochas-ras@u.washington.edu
+    on_failure: always
