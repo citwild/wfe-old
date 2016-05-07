@@ -1,20 +1,18 @@
 package main
 
 import (
-	// "fmt"
-	// "net/http"
+        // "fmt"
+        // "net/http"
 
-	// "io"
-	// "io/ioutil"
-	// "log"
-	// "os"
+        // "io"
+        // "io/ioutil"
+        // "log"
+        // "os"
 
-	// "github.com/aws/aws-sdk-go/aws"
-	// "github.com/aws/aws-sdk-go/aws/session"
-	// "github.com/aws/aws-sdk-go/service/dynamodb"
-	// "github.com/aws/aws-sdk-go/service/s3"
-
-	// "github.com/gin-gonic/gin"
+  //"github.com/aws/aws-sdk-go/aws"
+  //"github.com/aws/aws-sdk-go/aws/session"
+  //"github.com/aws/aws-sdk-go/service/dynamodb"
+        // "github.com/aws/aws-sdk-go/service/s3"
 
   "github.com/wide-field-ethnography/wfe/routers"
   "github.com/wide-field-ethnography/wfe/settings"
@@ -43,19 +41,8 @@ func main() {
 
 // // TODO: requestccess route
 // func main() {
-// 	Init(ioutil.Discard, os.Stdout, os.Stdout, os.Stderr)
-// 	router := gin.Default()
-// 	router.LoadHTMLGlob("templates/*.tmpl")
-// 	// Uncomment the next line when ready for release.
-// 	// gin.SetMode(gin.ReleaseMode)
-
-// 	router.GET("/", wfeIndex)
-// 	router.GET("/contact", wfeContact)
 // 	router.POST("/auth", userAuth)
 // 	router.POST("/bucketlist", bucketShow)
-// 	// router.POST("/requestccess", wfeRequestAccess)
-
-// 	router.Run(":8080")
 // }
 
 // func wfeIndex(c *gin.Context) {

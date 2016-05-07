@@ -9,9 +9,18 @@ import (
 )
 
 func SetMainRoutes( router *mux.Router) *mux.Router {
+
+  // Front/Main page
   router.Handle("/", negroni.New(
     negroni.HandlerFunc(controllers.MainController),
   )).Methods("GET")
+
+  // Contact Us page
+  router.Handle("/contact", negroni.New(
+    negroni.HandlerFunc(controllers.ContactController),
+  )).Methods("GET")
+
+  // TODO: Request access
 
   return router
 }

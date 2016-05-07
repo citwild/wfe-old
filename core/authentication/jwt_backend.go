@@ -51,12 +51,13 @@ func (backend *JWTAuthenticationBackend) GenerateToken(userUUID string) (string,
   return tokenString, nil
 }
 
+//TODO: integrate this with dyanmo DB
 func (backend *JWTAuthenticationBackend) Authenticate(user *models.User) bool {
-  hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("testing"), 10)
+  hashedPassword, _ := bcrypt.GenerateFromPassword([]byte("wfe123"), 10)
 
   testUser := models.User{
     UUID:     uuid.New(),
-    Username: "haku",
+    Username: "test@uw.edu",
     Password: string(hashedPassword),
   }
 

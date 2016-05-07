@@ -7,11 +7,14 @@ import (
   "os"
 )
 
-var environments = map[string]string{
-  "production":    "settings/prod.json",
-  "preproduction": "settings/pre.json",
-  "tests":         "../../settings/tests.json",
-}
+var configPath = "/Users/milesdowe/config.json"
+
+//var environments = map[string]string{
+//  "production":    "settings/prod.json",
+//  //"preproduction": "settings/pre.json",
+//  "preproduction": "~/config.json",
+//  "tests":         "../../settings/tests.json",
+//}
 
 type Settings struct {
   PrivateKeyPath     string
@@ -19,6 +22,13 @@ type Settings struct {
   JWTExpirationDelta int
 }
 
+// Settings for each stage of deployment
+type Staging struct {
+  Preproduction Settings
+  Production Settings
+}
+
+var staging Staging = Staging{}
 var settings Settings = Settings{}
 var env = "preproduction"
 
@@ -32,14 +42,21 @@ func Init() {
 }
 
 func LoadSettingsByEnv(env string) {
-  content, err := ioutil.ReadFile(environments[env])
+  content, err := ioutil.ReadFile(configPath)
   if err != nil {
     fmt.Println("Error while reading config file", err)
   }
+  staging = Staging{}
   settings = Settings{}
-  jsonErr := json.Unmarshal(content, &settings)
+  jsonErr := json.Unmarshal(content, &staging)
   if jsonErr != nil {
     fmt.Println("Error while parsing config file", jsonErr)
+  }
+
+  if env == "production" {
+    settings = staging.Production
+  } else {
+    settings = staging.Preproduction
   }
 }
 

@@ -27,3 +27,7 @@ _testmain.go
 
 # RSA Keys!!
 settings/keys/*
+
+# IDE files
+*.idea
+*iml
