@@ -1,0 +1,5 @@
+{
+  "PrivateKeyPath": "/Users/milesdowe/go/src/api.jwt.auth/settings/keys/private_key",
+  "PublicKeyPath": "/Users/milesdowe/go/src/api.jwt.auth/settings/keys/public_key.pub",
+  "JWTExpirationDelta": 72
+}

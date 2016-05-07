@@ -1,0 +1,28 @@
+{
+  "name": "wfe",
+  "version": "0.0.1",
+  "description": "Wide field ethnography research web application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wide-field-ethnography/wfe.git"
+  },
+  "keywords": [
+    "wide-field",
+    "ethnography"
+  ],
+  "author": "UW Bothell, Prof. Socha Research Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wide-field-ethnography/wfe/issues"
+  },
+  "homepage": "https://github.com/wide-field-ethnography/wfe#readme",
+  "dependencies": {
+    "react": "^15.0.2",
+    "react-bootstrap": "^0.29.3",
+    "react-dom": "^15.0.2"
+  }
+}

@@ -24,3 +24,6 @@ _testmain.go
 *.prof
 
 *.DS_STORE
+
+# RSA Keys!!
+settings/keys/*
