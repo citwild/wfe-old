@@ -14,8 +14,8 @@ import (
   //"github.com/aws/aws-sdk-go/service/dynamodb"
         // "github.com/aws/aws-sdk-go/service/s3"
 
-  "github.com/wide-field-ethnography/wfe/routers"
-  "github.com/wide-field-ethnography/wfe/settings"
+  "github.com/wide-field-ethnography/wfe/server/routers"
+  "github.com/wide-field-ethnography/wfe/server/settings"
   "github.com/codegangsta/negroni"
   "net/http"
 )

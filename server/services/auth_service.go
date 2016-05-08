@@ -1,9 +1,9 @@
 package services
 
 import (
-  "github.com/wide-field-ethnography/wfe/api/parameters"
-  "github.com/wide-field-ethnography/wfe/core/authentication"
-  "github.com/wide-field-ethnography/wfe/services/models"
+  "github.com/wide-field-ethnography/wfe/server/api/parameters"
+  "github.com/wide-field-ethnography/wfe/server/core/authentication"
+  "github.com/wide-field-ethnography/wfe/server/services/models"
   "encoding/json"
   jwt "github.com/dgrijalva/jwt-go"
   "net/http"

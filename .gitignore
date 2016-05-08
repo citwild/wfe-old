@@ -29,5 +29,5 @@ _testmain.go
 settings/keys/*
 
 # IDE files
-*.idea
+.idea
 *iml

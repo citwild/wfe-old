@@ -1,11 +1,13 @@
 package controllers
 
 import (
-  "github.com/wide-field-ethnography/wfe/services"
-  "github.com/wide-field-ethnography/wfe/services/models"
+  "github.com/wide-field-ethnography/wfe/server/services"
+  "github.com/wide-field-ethnography/wfe/server/services/models"
   "encoding/json"
   "net/http"
   "code.google.com/p/go-uuid/uuid"
+  "path"
+  "html/template"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -16,9 +18,18 @@ func Login(w http.ResponseWriter, r *http.Request) {
   requestUser.Password = r.FormValue("password")
 
   responseStatus, token := services.Login(requestUser)
-  w.Header().Set("Content-Type", "application/json")
-  w.WriteHeader(responseStatus)
-  w.Write(token)
+
+  // authentication successful, direct to landing page
+  if responseStatus == http.StatusOK {
+    filepath := path.Join("client/templates", "bucketlist.tmpl")
+
+    //provide token in cookie (bad practice?)
+    http.SetCookie(w, createJwtCookie(string(token)))
+    w.WriteHeader(responseStatus)
+
+    tmpl, err := template.ParseFiles(filepath)
+    forwardUserToTemplate(tmpl, w, err)
+  }
 }
 
 func RefreshToken(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

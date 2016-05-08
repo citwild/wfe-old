@@ -1,9 +1,10 @@
 package authentication
 
+//TODO: Get rid of redis, we're using mongo
 import (
-  "github.com/wide-field-ethnography/wfe/core/redis"
-  "github.com/wide-field-ethnography/wfe/services/models"
-  "github.com/wide-field-ethnography/wfe/settings"
+  "github.com/wide-field-ethnography/wfe/server/core/redis"
+  "github.com/wide-field-ethnography/wfe/server/services/models"
+  "github.com/wide-field-ethnography/wfe/server/settings"
   "bufio"
   "code.google.com/p/go-uuid/uuid"
   "crypto/rsa"

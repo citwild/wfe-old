@@ -1,8 +1,8 @@
 package routers
 
 import (
-  "github.com/wide-field-ethnography/wfe/controllers"
-  "github.com/wide-field-ethnography/wfe/core/authentication"
+  "github.com/wide-field-ethnography/wfe/server/controllers"
+  "github.com/wide-field-ethnography/wfe/server/core/authentication"
   "github.com/codegangsta/negroni"
   "github.com/gorilla/mux"
 )
