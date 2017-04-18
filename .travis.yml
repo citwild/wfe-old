@@ -5,6 +5,12 @@ matrix:
     - go: 1.5.4
     - go: 1.6.2
 
+
+install:
+  # Add Godeps dependencies to GOPATH and PATH
+  - export GOPATH="$HOME/gopath/src/github.com/wide-field-ethnography/wfe/Godeps/_workspace:$GOPATH"
+  - export PATH="$HOME/gopath/src/github.com/wide-field-ethnography/wfe/Godeps/_workspace/bin:$PATH"
+
 script:
 - go test -v ./...
 - go vet ./...
